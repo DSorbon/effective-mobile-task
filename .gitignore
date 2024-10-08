@@ -1,0 +1,6 @@
+data-db
+bin
+.env
+/.idea
+/.vscode
+./main

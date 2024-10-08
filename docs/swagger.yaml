@@ -1,0 +1,287 @@
+basePath: /api/v1/
+definitions:
+  models.Pagination:
+    properties:
+      current_page:
+        type: integer
+      next:
+        type: integer
+      previous:
+        type: integer
+      record_per_page:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  models.Song:
+    properties:
+      artist:
+        type: string
+      created_at:
+        type: string
+      group:
+        type: string
+      id:
+        type: integer
+      lyrics:
+        type: string
+      release_date:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.SongPagination:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Song'
+        type: array
+      page:
+        $ref: '#/definitions/models.Pagination'
+    type: object
+  request.SongCreate:
+    properties:
+      artist:
+        type: string
+      group:
+        type: string
+      lyrics:
+        type: string
+      release_date:
+        type: string
+      title:
+        type: string
+    required:
+    - artist
+    - group
+    - lyrics
+    - title
+    type: object
+  request.SongUpdate:
+    properties:
+      artist:
+        type: string
+      group:
+        type: string
+      lyrics:
+        type: string
+      release_date:
+        type: string
+      title:
+        type: string
+    type: object
+  response.ResponseMessage:
+    properties:
+      message:
+        type: string
+    type: object
+  response.ResponseValidationErrors:
+    properties:
+      message:
+        type: string
+      validate_errors:
+        additionalProperties:
+          type: string
+        type: object
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: REST API for Song App
+  title: Song API
+  version: "1.0"
+paths:
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: get all songs
+      parameters:
+      - description: search by artist
+        in: query
+        name: artist
+        type: string
+      - description: search by group
+        in: query
+        name: group
+        type: string
+      - description: search by title
+        in: query
+        name: title
+        type: string
+      - description: search by releaseDate
+        in: query
+        name: releaseDate
+        type: string
+      - description: paginated by page
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SongPagination'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+      summary: Get All Songs
+      tags:
+      - songs
+    post:
+      consumes:
+      - application/json
+      description: create song
+      parameters:
+      - description: create song
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/request.SongCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.ResponseValidationErrors'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+      summary: Create Song
+      tags:
+      - songs
+  /songs/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete song by id
+      parameters:
+      - description: update by id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+      summary: Delete Song By ID
+      tags:
+      - songs
+    get:
+      consumes:
+      - application/json
+      description: get song by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+      summary: Get Song By ID
+      tags:
+      - songs
+    patch:
+      consumes:
+      - application/json
+      description: update song by id
+      parameters:
+      - description: update by id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update song
+        in: body
+        name: input
+        schema:
+          $ref: '#/definitions/request.SongUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.ResponseValidationErrors'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/response.ResponseMessage'
+      summary: Update Song By ID
+      tags:
+      - songs
+swagger: "2.0"
